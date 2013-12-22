@@ -1,0 +1,38 @@
+Hosting Package: Extremo
+Domain: thebirder.rvhost.com.ar
+IP Address: 31.170.167.189
+
+Control Panel Login Details
+
+Email Address: terryrockstar22@gmail.com
+Password: birder22-
+
+Control Panel URL: http://cpanel.rvhost.com.ar
+
+Server Information
+
+Server Name: server14.rvhost.com.ar
+Server IP: 31.170.166.16
+
+If you are using an existing domain with your new hosting account, you will need to update the nameservers to point to the nameservers listed below.
+
+Nameserver 1: ns1.main-hosting.com 31.170.163.241
+Nameserver 2: ns2.main-hosting.com 64.191.115.234
+Nameserver 3: ns3.main-hosting.com 173.192.183.247
+Nameserver 4: ns4.main-hosting.com 31.170.164.249
+
+Uploading Your Website
+
+You may use one of the addresses given below manage your web site:
+
+Temporary FTP Hostname: 31.170.167.189
+Full FTP Hostname: ftp.thebirder.rvhost.com.ar
+FTP Username: u799119477
+FTP Password: birder22-
+
+-----------------------
+
+base de datos		u799119477_bird
+ususario			u799119477_root
+servidor mysql		mysql.rvhost.com.ar
+Password 			birder22-

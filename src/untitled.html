@@ -1,0 +1,87 @@
+<?php
+if ($_SESSION['connected']==1){
+  include "includes/container_user.php";
+}else{
+   if(!empty($_POST['mail']))//esto es para el logueo
+   {
+      $login=new conector_pg;
+      $mail=$login->no_inyeccion($_POST['mail']);
+      $pass=$login->no_inyeccion($_POST['pass']);
+      if(($login->valida_user($mail,$pass))==true)//si se loguea recargo la pagina
+      {
+         header('Location: ./');
+      }
+      else //aqui puedo mandar una alerta de que no se conecto
+      {
+         echo "<script>$(document).on('ready',function(){toastr.error('Error: los datos no son correctos');}); </script>";
+      }
+   }
+   if(!empty($_POST['txt_mail']))//esto es para el registro
+   {
+      $register=new conector_pg;
+      $txt_name=$register->no_inyeccion($_POST['txt_name']);
+      $txt_mail=$register->no_inyeccion($_POST['txt_mail']);
+      $txt_pass=$register->no_inyeccion($_POST['txt_pass']);
+      $sexo=$_POST['sexo'];
+
+      //revisar si el usuario existe
+      $query_exist = "SELECT * FROM usuarios WHERE email='$txt_mail' OR id_user='$txt_name'";
+      $exist=$register->consultar($query_exist); 
+
+      if(pg_num_rows($exist)==0)//si no coinciden los datos con otros usuarios
+      {
+         $time=time();//fecha del registro del usuario
+         $allowed="no";//no se permite entrar hasta que revise su correo y valla al link
+         $type_user = "Normal";//tipo de usuario
+         $avatar="resources/img/nenek.png";//imagen por default
+         $name_folder_user= md5(uniqid());//carpeta del usuario
+         $avatar2 = "images/face_1.png"; // avatar para cenek
+         $hora= date("H:i:s"); //hora del sistena
+         $fecha = date("Y/n/d"); // fecha en que se registro el usuario
+         $activacion=uniqid(); //activacion de nenek-saak
+
+
+         //le enviamos un correo al usuario para que active su cuenta
+
+         //creamos su carpeta
+         $arreglo=array(" ",".","*","/","<",">","?","¿","\"",'"',":","!","¡",",","@","%","+","~","#","&","=","]","}","{","[","$","'","^","_");
+
+         $id_user=str_replace($arreglo,"",$txt_name);
+
+         //carpeta profiles
+         $folder_profile= md5("folderProfiles");
+
+         //carpeta del usuario oculta :S
+         mkdir($folder_profile."/".$name_folder_user."", 0777);
+         //creamos las carpetas personales del usuario
+         exec('cp -R cd4bb546ff98565a6791465474c14568 '. $id_user);
+
+         $info_user= md5("info_user");
+
+         $nuevoarchivo = fopen($id_user.'/'.$info_user.'.txt', "w+");
+         fwrite($nuevoarchivo,"$id_user");
+         fclose($nuevoarchivo);
+
+         if(file_exists($id_user.'/'.$info_user.'.txt'))
+         {
+            $query_insert = "INSERT INTO usuarios(id_user,password,id_profile,rank,root,sexo,localizacion,puesto,comentarios,sitio_web,ape_mat,ape_pat,nombre,email,avatar,last_id,dia_nac,ano_nac,mes_nac,last_msg,nickstatus,status,login_time,last_login_time,section,organizacion,id_org,time, allowed,tipo_usuario,folder_user) VALUES ('$id_user','$txt_pass','','','','$sexo','','','','','','','$txt_name','$txt_mail','$avatar','', '', '', '', '', '','','','','','','','$time','$allowed','$type_user','$name_folder_user')";
+            if($user_new)
+            {
+               //$query_insert_cenenek = "INSERT INTO users VALUES('$id_user','$txt_name','$txt_pass','$avatar2','$hora','$fecha','$activacion','$txt_mail','$name_folder$
+               //$result_cenenek = pg_query($conn,$query_insert_cenenek);
+               //if($result_cenenek)
+                  echo "<script>$(document).on('ready',function(){toastr.success('Exito: Has creado una cuenta en nenek');});</script>";
+               //else
+                 // echo "<script>$(document).on('ready',function(){ toastr.error('Error: No se pudo crear la cuenta'); });</script>";
+            }
+            else
+               echo "<script>$(document).on('ready',function(){ toastr.error('Error: no se pudo crear la cuenta'); });</script>";
+         }
+
+      }
+     else //aqui puedo mandar una alerta de que coinciden los datos
+      {
+        echo "<script>$(document).on('ready',function(){ toastr.error('Error: coincidencia de datos, intenta de nuevo'); });</script>";
+      }
+   }
+}
